@@ -1,11 +1,3 @@
-<script setup lang="ts">
-//
-</script>
-
 <template>
-  <view class="category">category</view>
+  <view class="category">category11</view>
 </template>
-
-<style lang="scss">
-//
-</style>

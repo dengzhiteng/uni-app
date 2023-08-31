@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HotItem } from '@/types/home'
-defineProps<{
+const props = defineProps<{
   list: HotItem[]
 }>()
 </script>

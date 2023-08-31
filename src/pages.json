@@ -1,6 +1,5 @@
 {
 	"pages": [
-		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -38,7 +37,26 @@
 			"style": {
 				"navigationBarTitleText": "goods"
 			}
+		},
+    {
+			"path": "pages/hot/hot",
+			"style": {
+				"navigationBarTitleText": "热门"
+			}
+		},
+		{
+			"path": "pages/demo/uniDemo",
+			"style": {
+				"navigationBarTitleText": "uniDemo"
+			}
+		},
+		{
+			"path": "pages/demo/uviewDemo",
+			"style": {
+				"navigationBarTitleText": "uviewDemo"
+			}
 		}
+
 	],
 	"easycom": {
 		"autoscan": true,

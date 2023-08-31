@@ -41,9 +41,9 @@ const onScrolltolower = () => {
 // 刷新
 const isTriggered = ref(false) // 下拉刷新状态
 const onRefresherrefresh = async () => {
-  isTriggered.value = true // 开启动画
+  isTriggered.value = true
   guessRef.value?.resetData()
-  await Promise.all([getHomeBanner(), getHomeCategory(), getHot()])
+  await Promise.all([getHomeBanner(), getHomeCategory(), getHot(), guessRef.value?.getMore()])
   isTriggered.value = false
 }
 </script>
@@ -55,6 +55,7 @@ const onRefresherrefresh = async () => {
     <scroll-view
       scroll-y
       refresher-enabled
+      :refresher-triggered="isTriggered"
       @refresherrefresh="onRefresherrefresh"
       @scrolltolower="onScrolltolower"
       class="scroll-view"

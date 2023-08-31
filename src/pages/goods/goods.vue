@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 <template>
-  <view>goods</view>
+  <view></view>
 </template>
 <style scoped lang="scss"></style>

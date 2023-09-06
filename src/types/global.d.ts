@@ -18,3 +18,13 @@ export type PageResult<T> = {
   /** 每页条数 */
   pageSize: number
 }
+
+export type GoodsItem = {
+  id: string
+  name: string
+  desc: string
+  price: string
+  picture: string
+  discount: number
+  orderNum: number
+}

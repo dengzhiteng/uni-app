@@ -2,15 +2,45 @@
 import { GoodsAPI } from '@/apis/goods'
 import type { Goods } from '@/types/goods'
 import { onLoad } from '@dcloudio/uni-app'
+// 微信开发工具要以普通模式重新进行编译,否则会提示无法找到相关资源
+import AddressPanel from '@/pages/goods/components/AddressPanel.vue'
+import ServicePanel from '@/pages/goods/components/ServicePanel.vue'
 
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const query = defineProps({ id: String })
 const goods = ref<Goods>()
-const mainPicIndex = ref(1)
 const getGoodsData = async (id: string) => {
   const res = await GoodsAPI(id)
   goods.value = res.result
 }
+
+// 轮播图变化时
+const currentIndex = ref(0)
+const onChange: UniHelper.SwiperOnChange = (ev) => {
+  currentIndex.value = ev.detail.current
+}
+
+// 点击图片时
+const onTapImage = (url: string) => {
+  uni.previewImage({
+    current: url,
+    urls: goods.value!.mainPictures,
+  })
+}
+
+// uni-ui 弹出层组件 ref
+const popup = ref<{
+  open: (type?: UniHelper.UniPopupType) => void
+  close: () => void
+}>()
+
+// 弹出层条件渲染
+const popupName = ref<'address' | 'service'>()
+const openPopup = (name: typeof popupName.value) => {
+  popupName.value = name
+  popup.value?.open()
+}
+
 onLoad(() => {
   getGoodsData(query.id!)
 })
@@ -22,13 +52,13 @@ onLoad(() => {
     <view class="goods">
       <!-- 商品主图 -->
       <view class="preview">
-        <swiper circular>
-          <swiper-item v-for="picture in goods?.mainPictures" :key="picture">
-            <image mode="aspectFill" :src="picture" />
+        <swiper @change="onChange" circular>
+          <swiper-item v-for="item in goods?.mainPictures" :key="item">
+            <image @tap="onTapImage(item)" mode="aspectFill" :src="item" />
           </swiper-item>
         </swiper>
         <view class="indicator">
-          <text class="current">{{ mainPicIndex }}</text>
+          <text class="current">{{ currentIndex + 1 }}</text>
           <text class="split">/</text>
           <text class="total">{{ goods?.mainPictures.length }}</text>
         </view>
@@ -50,17 +80,16 @@ onLoad(() => {
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
-        <view class="item arrow">
+        <view @tap="openPopup('address')" class="item arrow">
           <text class="label">送至</text>
           <text class="text ellipsis"> 请选择收获地址 </text>
         </view>
-        <view class="item arrow">
+        <view @tap="openPopup('service')" class="item arrow">
           <text class="label">服务</text>
           <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
         </view>
       </view>
     </view>
-
     <!-- 商品详情 -->
     <view class="detail panel">
       <view class="title">
@@ -78,7 +107,6 @@ onLoad(() => {
         <image mode="widthFix" :src="pic" v-for="pic in goods?.details.pictures" :key="pic"></image>
       </view>
     </view>
-
     <!-- 同类推荐 -->
     <view class="similar panel">
       <view class="title">
@@ -107,6 +135,11 @@ onLoad(() => {
     </view>
   </scroll-view>
 
+  <!-- 弹出层 -->
+  <uni-popup ref="popup" type="bottom" background-color="#fff">
+    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
+    <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
+  </uni-popup>
   <!-- 用户操作 -->
   <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
     <view class="icons">

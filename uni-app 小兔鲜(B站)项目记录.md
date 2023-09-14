@@ -10,3 +10,10 @@ const onTab = (index: number) => {
 }
 
 ```
+
+3. 引用局部组件
+- 微信开发工具要以普通模式重新进行编译,否则会提示无法找到相关资源
+```ts
+  import AddressPanel from '@/pages/goods/components/AddressPanel.vue'
+  import ServicePanel from '@/pages/goods/components/ServicePanel.vue'
+```

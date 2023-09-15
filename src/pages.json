@@ -38,7 +38,7 @@
 				"navigationBarTitleText": "goods"
 			}
 		},
-    {
+		{
 			"path": "pages/hot/hot",
 			"style": {
 				"navigationBarTitleText": "热门"
@@ -56,7 +56,6 @@
 				"navigationBarTitleText": "uviewDemo"
 			}
 		}
-
 	],
 	"easycom": {
 		"autoscan": true,
@@ -105,5 +104,33 @@
 				"selectedIconPath": "static/tabs/user_selected.png"
 			}
 		]
-	}
+	},
+   // 分包加载规则
+  "subPackages": [
+    {
+      "root": "pagesMember",
+      "pages": [
+        {
+          "path": "settings/settings",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        },
+         {
+          "path": "profile/profile",
+          "style": {
+            "navigationBarTitleText": "个人信息",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    }
+  ],
+  // 分包预下载规则
+  "preloadRule":{
+    "pages/my/my": {
+      "network": "all",
+      "packages": ["pagesMember"]
+    }
+  },
 }

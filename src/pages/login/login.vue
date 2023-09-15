@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/apis/login'
-// import { useMemberStore } from '@/stores'
+import { useMemberStore } from '@/stores'
 import type { LoginResult } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 
@@ -15,8 +15,8 @@ onLoad(async () => {
 // 获取用户手机号码
 const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
   const { encryptedData, iv } = ev.detail
-  // if (!iv || !encryptedData) return false
-  const res = await postLoginWxMinAPI({ code, encryptedData: encryptedData!, iv: iv! })
+  if (!iv || !encryptedData) return false
+  const res = await postLoginWxMinAPI({ code, encryptedData: encryptedData, iv: iv })
   loginSuccess(res.result)
 }
 // #endif
@@ -29,14 +29,13 @@ const onGetphonenumberSimple = async () => {
 
 const loginSuccess = (profile: LoginResult) => {
   // 保存会员信息
-  // const memberStore = useMemberStore()
-  // memberStore.setProfile(profile)
+  const memberStore = useMemberStore()
+  memberStore.setProfile(profile)
   // 成功提示
   uni.showToast({ icon: 'success', title: '登录成功' })
   setTimeout(() => {
     // 页面跳转
-    uni.switchTab({ url: '/pages/index/index' })
-    // uni.navigateBack()
+    uni.switchTab({ url: '/pages/my/my' })
   }, 500)
 }
 </script>

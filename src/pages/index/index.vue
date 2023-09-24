@@ -53,12 +53,12 @@ const onRefresherrefresh = async () => {
   <PageSkeleton v-if="isLoading" />
   <template v-else>
     <scroll-view
+      class="scroll-view"
       scroll-y
       refresher-enabled
       :refresher-triggered="isTriggered"
       @refresherrefresh="onRefresherrefresh"
       @scrolltolower="onScrolltolower"
-      class="scroll-view"
     >
       <!-- 首页轮播 -->
       <XtxSwiper :list="bannerList"></XtxSwiper>

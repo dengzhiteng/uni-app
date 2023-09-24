@@ -3,7 +3,6 @@
 import { useMemberStore } from '@/stores'
 import { onShow } from '@dcloudio/uni-app'
 const { safeAreaInsets } = uni.getSystemInfoSync()
-const profile = ref()
 // 订单选项
 const orderTypes = [
   { type: 1, text: '待付款', icon: 'icon-currency' },
@@ -11,6 +10,21 @@ const orderTypes = [
   { type: 3, text: '待收货', icon: 'icon-check' },
   { type: 4, text: '待评价', icon: 'icon-comment' },
 ]
+// 猜你喜欢
+const guessRef = ref()
+const onScrolltolower = () => {
+  guessRef.value?.getMore()
+}
+// 刷新
+const isTriggered = ref(false) // 下拉刷新状态
+const onRefresherrefresh = async () => {
+  isTriggered.value = true
+  guessRef.value?.resetData()
+  await guessRef.value?.getMore()
+  isTriggered.value = false
+}
+
+const profile = ref()
 onShow(async () => {
   const memberStore = useMemberStore()
   profile.value = memberStore.profile
@@ -18,7 +32,15 @@ onShow(async () => {
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top>
+  <scroll-view
+    class="viewport"
+    scroll-y
+    enable-back-to-top
+    refresher-enabled
+    :refresher-triggered="isTriggered"
+    @refresherrefresh="onRefresherrefresh"
+    @scrolltolower="onScrolltolower"
+  >
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->
@@ -44,11 +66,11 @@ onShow(async () => {
         </navigator>
         <view class="meta">
           <navigator url="/pages/login/login" hover-class="none" class="nickname">
-            未登录</navigator
-          >
-          <view class="extra">
-            <text class="tips">点击登录账号</text>
-          </view>
+            未登录
+            <view class="extra">
+              <text class="tips">点击登录账号</text>
+            </view>
+          </navigator>
         </view>
       </view>
       <navigator class="settings" url="/pagesMember/settings/settings" hover-class="none">
@@ -94,7 +116,6 @@ page {
 }
 
 .viewport {
-  height: 100%;
   background-repeat: no-repeat;
   background-image: url(https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/center_bg.png);
   background-size: 100% auto;
@@ -104,7 +125,6 @@ page {
 .profile {
   margin-top: 20rpx;
   position: relative;
-
   .overview {
     display: flex;
     height: 120rpx;
